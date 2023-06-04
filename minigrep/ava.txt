@@ -1,0 +1,4 @@
+Searching for: aba
+In file: example.txt
+Found 1 results
+Sabe aba, vaca.
