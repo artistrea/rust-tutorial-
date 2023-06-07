@@ -1,45 +1,24 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function Sidebar({
   rooms,
   room,
   onRoomChange,
   connected,
+  addRoom,
   retryIn,
 }: {
   rooms: string[];
   room: string;
   onRoomChange: (room: string) => void;
   connected: boolean;
+  addRoom: (room: string) => void;
   retryIn: number;
 }) {
-  const [passedTime, setPassedTime] = useState(0);
-  useEffect(() => {
-    if (retryIn === 0) return;
-
-    const x = 200;
-    const intr = setInterval(() => {
-      setPassedTime((p) => p + x);
-    }, x);
-
-    return () => {
-      setPassedTime(0);
-      clearInterval(intr);
-    };
-  }, [retryIn]);
-
-  const timeLeft = retryIn - passedTime;
+  const [roomToAdd, setRoomToAdd] = useState("");
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        background: "rgba(0,0,0,0.1)",
-        borderRight: "solid rgba(0,0,0,0.3) 1px",
-        minHeight: "100vh",
-      }}
-    >
+    <aside className="flex flex-col bg-black bg-opacity-[0.1] border-r border-solid border-black border-opacity-5 min-w-max">
       <p
         className={`${
           connected || retryIn === 0 ? "text-green-500" : "text-red-500"
@@ -47,7 +26,7 @@ export default function Sidebar({
       >
         {connected || retryIn === 0
           ? "Connected"
-          : `Trying again in ${(timeLeft / 1000).toFixed(1)}s`}
+          : `Trying again in ${(retryIn / 1000).toFixed(3)}s`}
       </p>
       <nav style={{ display: "contents" }}>
         <ul style={{ height: "100%", margin: 0, padding: 0 }}>
@@ -67,6 +46,27 @@ export default function Sidebar({
           ))}
         </ul>
       </nav>
-    </div>
+      <form
+        className="flex flex-col items-center"
+        onSubmit={(e) => {
+          e.preventDefault();
+          addRoom(roomToAdd);
+        }}
+      >
+        <label htmlFor="roomt">Add room:</label>
+        <div className="m-1">
+          <input
+            type="text"
+            id="room"
+            className="p-1"
+            value={roomToAdd}
+            onChange={(e) => setRoomToAdd(e.target.value)}
+          />
+          <button className="px-3 py-1 bg-black bg-opacity-[0.4] text-center">
+            +
+          </button>
+        </div>
+      </form>
+    </aside>
   );
 }

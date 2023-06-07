@@ -1,6 +1,5 @@
 #[macro_use] extern crate rocket;
 
-use rocket::form::Form;
 use rocket::http::{Header, Status};
 use rocket::serde::json::Json;
 use rocket::{Request, Response};
@@ -27,7 +26,7 @@ impl Fairing for CORS {
     }
 
     async fn on_response<'r>(&self, _request: &'r Request<'_>, response: &mut Response<'r>) {
-        // only allow some:
+        // change on prod:
         response.set_header(Header::new("Access-Control-Allow-Origin", "*"));
         response.set_header(Header::new("Access-Control-Allow-Methods", "POST, GET, PATCH, OPTIONS"));
         response.set_header(Header::new("Access-Control-Allow-Headers", "*"));
@@ -90,5 +89,5 @@ fn rocket() -> _ {
         .attach(CORS)
         .manage(channel::<Message>(1024).0)
         .mount("/", routes![message, events, message_cors, events_cors])
-        .mount("/", FileServer::from(relative!("static")))
+        .mount("/", FileServer::from(relative!("dist")))
 }

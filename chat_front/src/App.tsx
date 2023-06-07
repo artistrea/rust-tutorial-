@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import "./App.css";
 import MessageForm from "./components/MessageForm";
 import MessageCard from "./components/MessageCard";
@@ -26,17 +26,22 @@ function App() {
     },
   ]);
 
-  const { connected, retryIn } = useSubscription((m) =>
-    setMessages((ms) => [...ms, m])
+  const onMessageReceived = useCallback(
+    (m: Message) => {
+      setMessages((ms) => [...ms, m]);
+    },
+    [setMessages]
   );
+
+  const { connected, retryIn } = useSubscription(onMessageReceived);
 
   const [rooms, setRooms] = useState(["rocket", "another room"]);
   const [curRoom, setCurRoom] = useState("rocket");
 
-  // const addRoom = (room: string) => {
-  //   if (!rooms.includes(room)) setRooms([...rooms, room]);
-  //   else setCurRoom(room);
-  // };
+  const addRoom = (room: string) => {
+    if (!rooms.includes(room)) setRooms([...rooms, room]);
+    else setCurRoom(room);
+  };
 
   function sendMessage({
     username,
@@ -62,6 +67,7 @@ function App() {
         retryIn={retryIn}
         room={curRoom}
         rooms={rooms}
+        addRoom={addRoom}
         onRoomChange={(r) => setCurRoom(r)}
       />
       <section

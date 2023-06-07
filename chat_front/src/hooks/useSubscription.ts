@@ -15,10 +15,18 @@ export default function useSubscription(onMessageReceived: OnMessageReceived) {
     const unsubscribe = subscribe({
       onErrorConnecting() {
         setConnected(false);
-        setTimeout(forceResubscribe, retryIn);
+        setPassedTime(0);
+        const x = 93;
+        const intr = setInterval(() => {
+          setPassedTime((p) => p + x);
+        }, x);
+
+        setTimeout(() => {
+          forceResubscribe();
+          clearInterval(intr);
+        }, retryIn);
       },
       onOpenStream() {
-        setResubscription(1);
         setConnected(true);
       },
       onReceiveMessage(ev) {
@@ -36,7 +44,16 @@ export default function useSubscription(onMessageReceived: OnMessageReceived) {
     });
 
     return unsubscribe;
-  }, [onMessageReceived, resubscription]);
+  }, [resubscription, onMessageReceived, retryIn]);
 
-  return { connected, retryIn };
+  const [passedTime, setPassedTime] = useState(0);
+  // useEffect(() => {
+  //   setPassedTime(0);
+
+  //   return () => {
+  //     clearInterval(intr);
+  //   };
+  // }, [resubscription, retryIn]);
+
+  return { connected, retryIn: retryIn - passedTime };
 }
