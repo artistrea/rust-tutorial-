@@ -78,27 +78,27 @@ function App() {
           flexDirection: "column",
         }}
       >
-        <div
+        <ul
+          className="max-h-[70vh] flex flex-col gap-4 mt-4 overflow-y-scroll sm:max-h-[80vh]
+            w-11/12
+          "
           style={{
-            display: "flex",
-            flexDirection: "column",
-            marginTop: "1rem",
-            gap: "1rem",
-            overflow: "scroll",
-            maxHeight: "80vh",
             width: "90%",
             flex: 1,
           }}
         >
-          {shownMessages.map((m) => (
-            <div style={{ width: "80%", marginInline: "auto" }}>
+          {shownMessages.map((m, i) => (
+            <li
+              className="w-4/5 mx-auto list-none"
+              key={m.message + m.username + m.room + i}
+            >
               <MessageCard username={m.username} message={m.message} />
-            </div>
+            </li>
           ))}
           {/* <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button> */}
-        </div>
+        </ul>
         <div style={{ marginTop: "3rem" }}>
           <MessageForm onSend={sendMessage} />
         </div>

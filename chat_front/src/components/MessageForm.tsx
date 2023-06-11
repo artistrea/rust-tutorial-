@@ -1,3 +1,4 @@
+import { Send } from "lucide-react";
 import { FormEventHandler, useState } from "react";
 
 type OnSendParams = {
@@ -27,12 +28,16 @@ export default function MessageForm({ onSend }: Props) {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: "flex" }}>
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col sm:flex-row justify-center"
+    >
       <div
         style={{ padding: "0.1rem", display: "flex", flexDirection: "column" }}
       >
         <label htmlFor="username">username:</label>
         <input
+          className="bg-neutral-700 p-2 text-white"
           id="username"
           type="text"
           value={username}
@@ -45,21 +50,21 @@ export default function MessageForm({ onSend }: Props) {
       >
         <label htmlFor="message">message:</label>
         <input
+          className="bg-neutral-700 p-2 text-white"
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
       </div>
       <button
+        className="h-full text-blue-400 text-xs relative flex justify-center items-center gap-1"
         style={{
-          height: "80%",
-          fontSize: "0.8rem",
-          padding: "0.3em 1em",
+          padding: "0.9em 1em",
           marginTop: "auto",
           borderRadius: 0,
         }}
       >
-        Send
+        <Send className="" />
       </button>
     </form>
   );
